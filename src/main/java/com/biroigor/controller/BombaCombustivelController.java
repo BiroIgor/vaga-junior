@@ -4,16 +4,20 @@ import com.biroigor.model.BombaCombustivel;
 import com.biroigor.model.TipoCombustivel;
 import com.biroigor.service.BombaCombustivelService;
 import com.biroigor.service.TipoCombustivelService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/bombas")
+@RequestMapping("/api/bombas-combustivel")
 public class BombaCombustivelController {
 
-    private final BombaCombustivelService bombaService = new BombaCombustivelService();
-    private final TipoCombustivelService tipoService = new TipoCombustivelService();
+    @Autowired
+    private BombaCombustivelService bombaService;
+    
+    @Autowired
+    private TipoCombustivelService tipoService;
 
     @GetMapping
     public List<BombaCombustivel> listar() {
@@ -21,14 +25,14 @@ public class BombaCombustivelController {
     }
 
     @PostMapping
-    public BombaCombustivel criar(@RequestParam String nome, @RequestParam Long tipoCombustivelId) {
+    public BombaCombustivel criar(@RequestParam("nome") String nome, @RequestParam("tipoCombustivelId") Long tipoCombustivelId) {
         TipoCombustivel tipo = tipoService.buscarPorId(tipoCombustivelId).orElse(null);
         if (tipo == null) return null;
         return bombaService.criar(nome, tipo);
     }
 
     @PutMapping("/{id}")
-    public BombaCombustivel atualizar(@PathVariable Long id, @RequestParam String nome, @RequestParam Long tipoCombustivelId) {
+    public BombaCombustivel atualizar(@PathVariable("id") Long id, @RequestParam("nome") String nome, @RequestParam("tipoCombustivelId") Long tipoCombustivelId) {
         TipoCombustivel tipo = tipoService.buscarPorId(tipoCombustivelId).orElse(null);
         if (tipo == null) return null;
         bombaService.atualizar(id, nome, tipo);
@@ -36,7 +40,7 @@ public class BombaCombustivelController {
     }
 
     @DeleteMapping("/{id}")
-    public void deletar(@PathVariable Long id) {
+    public void deletar(@PathVariable("id") Long id) {
         bombaService.deletar(id);
     }
 }

@@ -39,7 +39,7 @@ public class TipoCombustivelController {
     })
     public ResponseEntity<TipoCombustivel> buscarPorId(
             @Parameter(description = "ID do tipo de combustível", example = "1")
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
         return service.buscarPorId(id)
                 .map(tipo -> ResponseEntity.ok(tipo))
                 .orElse(ResponseEntity.notFound().build());
@@ -67,7 +67,7 @@ public class TipoCombustivelController {
     })
     public ResponseEntity<TipoCombustivel> atualizar(
             @Parameter(description = "ID do tipo de combustível", example = "1")
-            @PathVariable Long id, 
+            @PathVariable("id") Long id, 
             @Valid @RequestBody TipoCombustivel tipo) {
         TipoCombustivel tipoAtualizado = service.atualizar(id, tipo.getNome(), tipo.getPrecoPorLitro());
         return ResponseEntity.ok(tipoAtualizado);
@@ -81,7 +81,7 @@ public class TipoCombustivelController {
     })
     public ResponseEntity<Void> deletar(
             @Parameter(description = "ID do tipo de combustível", example = "1")
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

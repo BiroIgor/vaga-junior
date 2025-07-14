@@ -45,7 +45,7 @@ public class AbastecimentoController {
     })
     public ResponseEntity<Abastecimento> buscarPorId(
             @Parameter(description = "ID do abastecimento", example = "1")
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
         return abastecimentoService.buscarPorId(id)
                 .map(abastecimento -> ResponseEntity.ok(abastecimento))
                 .orElse(ResponseEntity.notFound().build());
@@ -60,13 +60,13 @@ public class AbastecimentoController {
     })
     public ResponseEntity<Abastecimento> criar(
             @Parameter(description = "ID da bomba utilizada", example = "1")
-            @RequestParam Long bombaId,
+            @RequestParam("bombaId") Long bombaId,
             @Parameter(description = "Data e hora do abastecimento (ISO format)", example = "2025-07-14T10:30:00")
-            @RequestParam String dataHora,
+            @RequestParam("dataHora") String dataHora,
             @Parameter(description = "Valor total pago", example = "55.00")
-            @RequestParam double valorTotal,
+            @RequestParam("valorTotal") double valorTotal,
             @Parameter(description = "Quantidade de litros abastecidos", example = "10.5")
-            @RequestParam double litragem
+            @RequestParam("litragem") double litragem
     ) {
         BombaCombustivel bomba = bombaService.buscarPorId(bombaId)
                 .orElse(null);
@@ -88,15 +88,15 @@ public class AbastecimentoController {
     })
     public ResponseEntity<Abastecimento> atualizar(
             @Parameter(description = "ID do abastecimento", example = "1")
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Parameter(description = "ID da nova bomba", example = "1")
-            @RequestParam Long bombaId,
+            @RequestParam("bombaId") Long bombaId,
             @Parameter(description = "Nova data e hora", example = "2025-07-14T10:30:00")
-            @RequestParam String dataHora,
+            @RequestParam("dataHora") String dataHora,
             @Parameter(description = "Novo valor total", example = "55.00")
-            @RequestParam double valorTotal,
+            @RequestParam("valorTotal") double valorTotal,
             @Parameter(description = "Nova quantidade de litros", example = "10.5")
-            @RequestParam double litragem
+            @RequestParam("litragem") double litragem
     ) {
         BombaCombustivel bomba = bombaService.buscarPorId(bombaId)
                 .orElse(null);
@@ -117,7 +117,7 @@ public class AbastecimentoController {
     })
     public ResponseEntity<Void> deletar(
             @Parameter(description = "ID do abastecimento", example = "1")
-            @PathVariable Long id) {
+            @PathVariable("id") Long id) {
         abastecimentoService.deletar(id);
         return ResponseEntity.noContent().build();
     }
@@ -127,7 +127,7 @@ public class AbastecimentoController {
     @ApiResponse(responseCode = "200", description = "Lista de abastecimentos da bomba")
     public ResponseEntity<List<Abastecimento>> listarPorBomba(
             @Parameter(description = "ID da bomba", example = "1")
-            @PathVariable Long bombaId) {
+            @PathVariable("bombaId") Long bombaId) {
         BombaCombustivel bomba = bombaService.buscarPorId(bombaId)
                 .orElse(null);
         if (bomba == null) {
@@ -143,7 +143,7 @@ public class AbastecimentoController {
     @ApiResponse(responseCode = "200", description = "Estatísticas da bomba")
     public ResponseEntity<EstatisticasBombaResponse> estatisticasPorBomba(
             @Parameter(description = "ID da bomba", example = "1")
-            @PathVariable Long bombaId) {
+            @PathVariable("bombaId") Long bombaId) {
         double[] stats = abastecimentoService.calcularEstatisticasPorBomba(bombaId);
         
         EstatisticasBombaResponse response = new EstatisticasBombaResponse(
