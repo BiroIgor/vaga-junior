@@ -1,6 +1,6 @@
-package com.BiroIgor.service;
+package com.biroigor.service;
 
-import com.BiroIgor.model.TipoCombustivel;
+import com.biroigor.model.TipoCombustivel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
