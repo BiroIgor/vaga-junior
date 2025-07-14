@@ -1,40 +1,102 @@
 package com.biroigor.service;
 
 import com.biroigor.model.TipoCombustivel;
-import java.util.ArrayList;
+import com.biroigor.repository.TipoCombustivelRepository;
+import com.biroigor.exception.ResourceNotFoundException;
+import com.biroigor.exception.DuplicateResourceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Serviço responsável pelas operações de negócio relacionadas aos tipos de combustível
+ */
+@Service
+@Transactional
 public class TipoCombustivelService {
-    private List<TipoCombustivel> tipos = new ArrayList<>();
-    private long proximoId = 1;
+    
+    @Autowired
+    private TipoCombustivelRepository repository;
 
+    /**
+     * Cria um novo tipo de combustível
+     * @param nome Nome do tipo de combustível
+     * @param precoPorLitro Preço por litro
+     * @return Tipo de combustível criado
+     * @throws DuplicateResourceException se já existe um tipo com o mesmo nome
+     */
     public TipoCombustivel criar(String nome, double precoPorLitro) {
-        TipoCombustivel tipo = new TipoCombustivel(proximoId++, nome, precoPorLitro);
-        tipos.add(tipo);
-        return tipo;
-    }
-
-    public List<TipoCombustivel> listar() {
-        return new ArrayList<>(tipos);
-    }
-
-    public Optional<TipoCombustivel> buscarPorId(Long id) {
-        return tipos.stream().filter(t -> t.getId().equals(id)).findFirst();
-    }
-
-    public boolean atualizar(Long id, String nome, double precoPorLitro) {
-        Optional<TipoCombustivel> opt = buscarPorId(id);
-        if (opt.isPresent()) {
-            TipoCombustivel tipo = opt.get();
-            tipo.setNome(nome);
-            tipo.setPrecoPorLitro(precoPorLitro);
-            return true;
+        if (repository.existsByNome(nome)) {
+            throw new DuplicateResourceException("Já existe um tipo de combustível com o nome: " + nome);
         }
-        return false;
+        
+        TipoCombustivel tipo = new TipoCombustivel(nome, precoPorLitro);
+        return repository.save(tipo);
     }
 
-    public boolean deletar(Long id) {
-        return tipos.removeIf(t -> t.getId().equals(id));
+    /**
+     * Lista todos os tipos de combustível
+     * @return Lista de tipos de combustível
+     */
+    @Transactional(readOnly = true)
+    public List<TipoCombustivel> listar() {
+        return repository.findAll();
+    }
+
+    /**
+     * Busca um tipo de combustível por ID
+     * @param id ID do tipo de combustível
+     * @return Optional contendo o tipo se encontrado
+     */
+    @Transactional(readOnly = true)
+    public Optional<TipoCombustivel> buscarPorId(Long id) {
+        return repository.findById(id);
+    }
+
+    /**
+     * Busca um tipo de combustível por nome
+     * @param nome Nome do tipo de combustível
+     * @return Optional contendo o tipo se encontrado
+     */
+    @Transactional(readOnly = true)
+    public Optional<TipoCombustivel> buscarPorNome(String nome) {
+        return repository.findByNome(nome);
+    }
+
+    /**
+     * Atualiza um tipo de combustível
+     * @param id ID do tipo de combustível
+     * @param nome Novo nome
+     * @param precoPorLitro Novo preço por litro
+     * @return Tipo de combustível atualizado
+     * @throws ResourceNotFoundException se o tipo não for encontrado
+     */
+    public TipoCombustivel atualizar(Long id, String nome, double precoPorLitro) {
+        TipoCombustivel tipo = repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Tipo de combustível não encontrado com ID: " + id));
+        
+        // Verifica se o novo nome já existe (apenas se for diferente do atual)
+        if (!tipo.getNome().equals(nome) && repository.existsByNome(nome)) {
+            throw new DuplicateResourceException("Já existe um tipo de combustível com o nome: " + nome);
+        }
+        
+        tipo.setNome(nome);
+        tipo.setPrecoPorLitro(precoPorLitro);
+        return repository.save(tipo);
+    }
+
+    /**
+     * Remove um tipo de combustível
+     * @param id ID do tipo de combustível
+     * @throws ResourceNotFoundException se o tipo não for encontrado
+     */
+    public void deletar(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Tipo de combustível não encontrado com ID: " + id);
+        }
+        repository.deleteById(id);
     }
 }
