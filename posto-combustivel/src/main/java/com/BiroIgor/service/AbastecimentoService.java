@@ -41,3 +41,5 @@ public class AbastecimentoService {
 
     public boolean deletar(Long id) {
         return abastecimentos.removeIf(a -> a.getId().equals(id));
+    }
+}
