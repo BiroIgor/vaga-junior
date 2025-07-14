@@ -1,4 +1,4 @@
-package com.BiroIgor;
+package com.biroigor;
 
 /**
  * Hello world!
