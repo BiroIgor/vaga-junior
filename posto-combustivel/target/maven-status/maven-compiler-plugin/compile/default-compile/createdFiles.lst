@@ -1,8 +1,0 @@
-com\biroigor\App.class
-com\biroigor\PostoCombustivelApplication.class
-com\biroigor\model\BombaCombustivel.class
-com\biroigor\controller\PostoCombustivelController.class
-com\biroigor\model\Abastecimento.class
-com\biroigor\service\TipoCombustivelService.class
-com\biroigor\controller\TipoCombustivelController.class
-com\biroigor\model\TipoCombustivel.class
