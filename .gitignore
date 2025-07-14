@@ -40,3 +40,12 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Docker
+.env
+docker-data/
+postgres_data/
+
+# Local database files (backup)
+*.sql.backup
+dumps/

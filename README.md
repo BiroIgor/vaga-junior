@@ -71,3 +71,70 @@ Desenvolver uma aplicação simples em **Java** para cadastro e consulta de abas
 - Mesmo que não finalize 100% dos requisitos, **a qualidade do seu processo será levada em conta**.
 
 ---
+
+## 🐘 PostgreSQL Setup
+
+### Opção 1: Usando Docker (Recomendado)
+
+1. **Instalar Docker** (se não tiver):
+   - Windows: [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+2. **Subir o banco PostgreSQL**:
+   ```bash
+   docker-compose up -d
+   ```
+
+3. **Verificar se está rodando**:
+   ```bash
+   docker-compose ps
+   ```
+
+4. **Acessar PgAdmin** (opcional):
+   - URL: http://localhost:8081
+   - Email: admin@posto.com
+   - Senha: admin123
+
+### Opção 2: PostgreSQL Local
+
+1. **Instalar PostgreSQL**:
+   - Windows: [PostgreSQL Installer](https://www.postgresql.org/download/windows/)
+
+2. **Criar banco de dados**:
+   ```sql
+   CREATE DATABASE posto_combustivel;
+   ```
+
+3. **Configurar usuário** (se necessário):
+   ```sql
+   CREATE USER postgres WITH PASSWORD 'postgres';
+   GRANT ALL PRIVILEGES ON DATABASE posto_combustivel TO postgres;
+   ```
+
+## 🚀 Executando a Aplicação
+
+```bash
+# Com PostgreSQL rodando
+mvn spring-boot:run
+
+# Para testes (usa H2 em memória)
+mvn test
+```
+
+## 📊 Acesso às Interfaces
+
+- **API**: http://localhost:8080/api/
+- **Swagger**: http://localhost:8080/swagger-ui.html
+- **PgAdmin**: http://localhost:8081 (se usando Docker)
+
+## 🔧 Configurações de Banco
+
+### Desenvolvimento (PostgreSQL)
+- **Host**: localhost:5432
+- **Database**: posto_combustivel
+- **Usuário**: postgres
+- **Senha**: postgres
+
+### Testes (H2 em memória)
+- **URL**: jdbc:h2:mem:testdb
+- **Usuário**: sa
+- **Senha**: (vazio)

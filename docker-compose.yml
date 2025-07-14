@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: posto_combustivel_db
+    restart: always
+    environment:
+      POSTGRES_DB: posto_combustivel
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - posto_network
+
+  # Opcional: PgAdmin para gerenciar o banco
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: posto_combustivel_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@posto.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+    networks:
+      - posto_network
+
+volumes:
+  postgres_data:
+
+networks:
+  posto_network:
+    driver: bridge
