@@ -1,4 +1,4 @@
-package com.seuprojeto;
+package com.BiroIgor;
 
 /**
  * Hello world!
