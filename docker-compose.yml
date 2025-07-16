@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: posto-combustivel-db
+    environment:
+      POSTGRES_DB: posto_combustivel
+      POSTGRES_USER: posto_admin
+      POSTGRES_PASSWORD: posto123
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - posto-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U posto_admin -d posto_combustivel"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: posto-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@posto.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+    networks:
+      - posto-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  posto-network:
+    driver: bridge

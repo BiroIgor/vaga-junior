@@ -37,6 +37,11 @@ Thumbs.db
 *.db
 *.mv.db
 *.trace.db
+data/
+
+# Docker
+.env
+docker-compose.override.yml
 
 # Logs
 *.log
