@@ -1,4 +1,4 @@
-package com.biroigor;
+package com.BiroIgor;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
